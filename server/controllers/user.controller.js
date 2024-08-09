@@ -1,28 +1,38 @@
 const User = require("../Model/user.model");
+const ApiError = require("../utils/ApiError");
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
+  const { userName, email, password } = req.body;
+
+  // Validation check
+  if (
+    !userName ||
+    !email ||
+    !password ||
+    userName.trim() === "" ||
+    email.trim() === "" ||
+    password.trim() === ""
+  ) {
+    return next(new ApiError(400, "All fields are required"));
+  }
+
   try {
-    const { userName, email, password } = req.body;
+    // Check for existing user by username
     const existingUser = await User.findOne({ userName });
     if (existingUser) {
-      return res.status(200).json({ message: "User already registered" });
-    }
-    if (
-      !userName ||
-      !email ||
-      !password ||
-      userName == "" ||
-      email == "" ||
-      password == ""
-    ) {
-      return res.status(404).json({ message: "all fields are required" });
+      return next(new ApiError(400, "User already registered"));
     }
 
+    // Create new user
     const newUser = new User({ userName, email, password });
-    let result = await newUser.save();
+    const result = await newUser.save();
     res.status(200).json({ message: "User successfully registered", result });
   } catch (error) {
-    console.log("Error: " + error);
+    next(
+      new ApiError(500, "An error occurred during registration", [
+        error.message,
+      ])
+    );
   }
 };
 
