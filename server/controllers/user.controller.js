@@ -17,13 +17,11 @@ const register = async (req, res, next) => {
   }
 
   try {
-    // Check for existing user by username
     const existingUser = await User.findOne({ userName });
     if (existingUser) {
       return next(new ApiError(400, "User already registered"));
     }
 
-    // Create new user
     const newUser = new User({ userName, email, password });
     const result = await newUser.save();
     res.status(200).json({ message: "User successfully registered", result });
