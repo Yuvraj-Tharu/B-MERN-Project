@@ -4,11 +4,8 @@ require("./Model/config");
 require("dotenv").config();
 
 const app = express();
-
-app.get("/", (req, res) => {
-  res.send("sdsd");
-});
-
+const userRouter = require("./routes/user.routes");
+app.use("/api/v1", userRouter);
 app.listen(process.env.PORT || 5000, () => {
   console.log(`listening on ${process.env.PORT}`);
 });

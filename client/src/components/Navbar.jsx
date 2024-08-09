@@ -27,7 +27,7 @@ export default function Header() {
             rightIcon={CiSearch}
           />
         </form>
-        <Button className="w-12 h-10 ld:hidden" color="gray" pill>
+        <Button className="w-12 h-10 lg:hidden" color="gray" pill>
           <CiSearch />
         </Button>
 
