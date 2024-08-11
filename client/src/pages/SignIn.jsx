@@ -16,6 +16,7 @@ export default function SignIn() {
     setLoading(true);
     setErrorMessage(null);
     if (!formData.userName || !formData.email || !formData.password) {
+      setLoading(false);
       return setErrorMessage("Please Fill out all fields");
     }
     try {

@@ -2,6 +2,7 @@ import { Alert, Button, Label, TextInput, Spinner } from "flowbite-react";
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 export default function SignUp() {
   const [formData, setformData] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
@@ -16,12 +17,14 @@ export default function SignUp() {
     setLoading(true);
     setErrorMessage(null);
     if (!formData.email || !formData.password) {
+      setLoading(false);
       return setErrorMessage("Please Fill out all fields");
     }
     try {
-      await axios.post("/api/v1/sign-In", formData);
+      let result = await axios.post("/api/v1/sign-In", formData);
       setLoading(false);
-      if (res.ok) {
+
+      if (result.statusText == "OK") {
         navigate("/");
       }
     } catch (error) {
@@ -84,7 +87,7 @@ export default function SignUp() {
                   <Spinner size="sm" /> <span className="pl-3">Loading...</span>
                 </>
               ) : (
-                "Sign Up"
+                "Sign In"
               )}
             </Button>
           </form>
@@ -92,7 +95,7 @@ export default function SignUp() {
           <div className="flex gap-2 text-sm mt-5">
             <span>Dont't have an account?</span>
             <Link to="/signin" className="text-blue-500">
-              Sign In
+              Sign Up
             </Link>
           </div>
           {errorMessage && (
