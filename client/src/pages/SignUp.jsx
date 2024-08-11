@@ -3,37 +3,43 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { useSelector, useDispatch } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSucess,
+} from "../redux/user/userSlice";
+
 export default function SignUp() {
   const [formData, setformData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handelchange = (e) => {
     setformData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
   const handelSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setErrorMessage(null);
+    dispatch(signInStart());
     if (!formData.email || !formData.password) {
-      setLoading(false);
-      return setErrorMessage("Please Fill out all fields");
+      return dispatch(signInFailure("Please fill out all the fields"));
     }
     try {
       let result = await axios.post("/api/v1/sign-In", formData);
-      setLoading(false);
 
       if (result.statusText == "OK") {
+        dispatch(signInSucess(result));
         navigate("/");
       }
     } catch (error) {
       if (error.response && error.response.data) {
-        setErrorMessage(error.response.data.message);
+        dispatch(signInFailure(error.response.data.message));
       } else {
         console.log(error.message);
       }
-      setLoading(false);
+      dispatch(signInFailure());
     }
   };
 
