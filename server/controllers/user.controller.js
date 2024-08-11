@@ -1,14 +1,12 @@
 const User = require("../Model/user.model");
 const ApiError = require("../utils/ApiError");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 
 const register = async (req, res, next) => {
   const { userName, email, password } = req.body;
 
-  // Validation check
   if (
-    !email ||
+    !userName ||
     !email ||
     !password ||
     userName.trim() === "" ||
@@ -21,12 +19,12 @@ const register = async (req, res, next) => {
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return next(new ApiError(400, "User already registered"));
+      return next(new ApiError(400, "User with this email already exists"));
     }
 
     const newUser = new User({ userName, email, password });
     const result = await newUser.save();
-    res.status(200).json({ message: "User successfully registered", result });
+    res.status(201).json({ message: "User successfully registered", result });
   } catch (error) {
     next(
       new ApiError(500, "An error occurred during registration", [
