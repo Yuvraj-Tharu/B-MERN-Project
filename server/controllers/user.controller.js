@@ -69,4 +69,39 @@ const SignIn = async (req, res, next) => {
   }
 };
 
-module.exports = { register, SignIn };
+const googleAuth = async (req, res, next) => {
+  const { userName, email, googlePhotoUrl } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.SECRETE_KEY);
+      const { password, ...rest } = user._doc;
+      res
+        .status(200)
+        .cookie("access_token", token, {
+          httpOnly: true,
+        })
+        .json({ token, message: "Successfully signed in", rest });
+    } else {
+      const generatePassword =
+        Math.random().toString(36).slice(-3) +
+        Math.random().toString().slice(-3);
+      const newUser = new User({
+        userName:
+          userName.toLowerCase().split("").join("") +
+          Math.random().toString(36).slice(-4),
+        email: email,
+        password: generatePassword,
+        profilePicture: googlePhotoUrl,
+      });
+
+      await newUser.save();
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { googleAuth };
+
+module.exports = { register, SignIn, googleAuth };

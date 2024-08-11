@@ -9,6 +9,7 @@ import {
   signInStart,
   signInSucess,
 } from "../redux/user/userSlice";
+import Oauth from "../components/Oauth";
 
 export default function SignUp() {
   const [formData, setformData] = useState({});
@@ -96,6 +97,7 @@ export default function SignUp() {
                 "Sign In"
               )}
             </Button>
+            <Oauth />
           </form>
 
           <div className="flex gap-2 text-sm mt-5">
