@@ -1,11 +1,12 @@
 import React from "react";
-import { Button, Navbar, TextInput } from "flowbite-react";
+import { Avatar, Button, Dropdown, Navbar, TextInput } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { FaMoon } from "react-icons/fa";
-
+import { useSelector } from "react-redux";
 export default function Header() {
   const path = useLocation().pathname;
+  const { currentUser } = useSelector((state) => state.user);
 
   return (
     <>
@@ -35,9 +36,41 @@ export default function Header() {
           <Button className="h-10 w-12 hidden sm:inline" color="gray" pill>
             <FaMoon />
           </Button>
-          <Button gradientDuoTone="purpleToBlue">
-            <Link to="SignIn">SignIn</Link>
-          </Button>
+          {currentUser ? (
+            <>
+              <Dropdown
+                className="select-none"
+                arrowIcon={false}
+                inline
+                label={
+                  <Avatar
+                    alt="user"
+                    img={currentUser.data.rest.profilePicture}
+                    rounded
+                  />
+                }
+              >
+                <Dropdown.Header>
+                  <span className="block text-sm">
+                    @{console.log(currentUser.data.userName)}
+                  </span>
+                  <span className="block text-sm font-medium truncate">
+                    {console.log(currentUser.data.email)}
+                  </span>
+                </Dropdown.Header>
+                <Link to={"/dashboard?tab=profile"}>
+                  <Dropdown.Item>Profile</Dropdown.Item>
+                </Link>
+                <Dropdown.Divider />
+                <Dropdown.Item>Sign Out</Dropdown.Item>
+              </Dropdown>
+            </>
+          ) : (
+            <Button gradientDuoTone="purpleToBlue">
+              <Link to="SignIn">SignIn</Link>
+            </Button>
+          )}
+
           <Navbar.Toggle />
         </div>
         <Navbar.Collapse>
