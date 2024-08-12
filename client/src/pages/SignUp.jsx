@@ -10,6 +10,7 @@ import {
   signInSucess,
 } from "../redux/user/userSlice";
 import Oauth from "../components/Oauth";
+import FacebookOauth from "../components/FacebookOauth";
 
 export default function SignUp() {
   const [formData, setformData] = useState({});
@@ -98,6 +99,7 @@ export default function SignUp() {
               )}
             </Button>
             <Oauth />
+            <FacebookOauth />
           </form>
 
           <div className="flex gap-2 text-sm mt-5">

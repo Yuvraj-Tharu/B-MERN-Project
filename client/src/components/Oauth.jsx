@@ -4,7 +4,7 @@ import { FaGooglePlusG } from "react-icons/fa6";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { app } from "../../Firebase";
 import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   signInFailure,
@@ -15,10 +15,9 @@ export default function Oauth() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const auth = getAuth(app);
-
   const handelGoogleClick = async (e) => {
     e.preventDefault();
+    const auth = getAuth(app);
     dispatch(signInStart());
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
@@ -35,6 +34,7 @@ export default function Oauth() {
         email,
         googlePhotoUrl,
       });
+
       if (result.statusText == "OK") {
         dispatch(signInSucess(result));
         navigate("/");
