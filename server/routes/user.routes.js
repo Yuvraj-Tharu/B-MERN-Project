@@ -11,5 +11,6 @@ UserRouter.post("/register", register);
 UserRouter.post("/sign-In", SignIn);
 UserRouter.post("/google-Auth", googleAuth);
 UserRouter.post("/facebook-Auth", facebookOauth);
+UserRouter.put("/facebook-Auth", facebookOauth);
 
 module.exports = UserRouter;

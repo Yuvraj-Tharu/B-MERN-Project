@@ -10,7 +10,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { app } from "../../Firebase";
-import { set } from "mongoose";
+
 export default function DashProfile() {
   const { currentUser } = useSelector((state) => state.user);
   const image = currentUser.data.rest.profilePicture;
@@ -65,7 +65,7 @@ export default function DashProfile() {
     );
   };
   return (
-    <div className="max-w-lg  mx-auto w-full p-3 ">
+    <div className="max-w-lg  mx-auto w-full p-3  ">
       <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
       <form className="flex flex-col gap-4">
         <input
@@ -88,7 +88,7 @@ export default function DashProfile() {
                 root: {
                   width: "100%",
                   height: "100%",
-                  position: "relative",
+                  position: "absolute",
                   top: "0",
                   left: "0",
                 },
