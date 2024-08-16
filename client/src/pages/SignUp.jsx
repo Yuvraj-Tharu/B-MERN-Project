@@ -32,7 +32,7 @@ export default function SignUp() {
       let result = await axios.post("/api/v1/sign-In", formData);
 
       if (result.statusText == "OK") {
-        dispatch(signInSucess(result));
+        dispatch(signInSucess(result.data.rest));
         navigate("/");
       }
     } catch (error) {

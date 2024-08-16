@@ -44,6 +44,7 @@ export default function Header() {
           >
             {theme == "light" ? <FaSun /> : <FaMoon />}
           </Button>
+
           {currentUser ? (
             <>
               <Dropdown
@@ -51,20 +52,14 @@ export default function Header() {
                 arrowIcon={false}
                 inline
                 label={
-                  <Avatar
-                    alt="user"
-                    img={currentUser.data.rest.profilePicture}
-                    rounded
-                  />
+                  <Avatar alt="user" img={currentUser.profilePicture} rounded />
                 }
               >
                 <Dropdown.Header>
                   <span className="block text-sm">
-                    @{console.log(currentUser.data.userName)}
+                    @{console.log(currentUser.userName)}
                   </span>
-                  <span className="block text-sm font-medium truncate">
-                    {console.log(currentUser.data.email)}
-                  </span>
+                  <span className="block text-sm font-medium truncate"></span>
                 </Dropdown.Header>
                 <Link to={"/dashboard?tab=profile"}>
                   <Dropdown.Item>Profile</Dropdown.Item>
