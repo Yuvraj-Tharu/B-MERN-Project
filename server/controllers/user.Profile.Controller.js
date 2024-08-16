@@ -47,7 +47,32 @@ const updateProfile = async (req, res, next) => {
 
     const { password, ...rest } = updateUser._doc;
     res.status(200).json(rest);
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
-module.exports = { updateProfile };
+const deleteProfile = async (req, res, next) => {
+  if (req.user.id !== req.params.userId) {
+    return next(
+      new ApiError(401, "You are not allowed to sign out your profile")
+    );
+  }
+
+  try {
+    await User.findByIdAndDelete(req.params.userId);
+    res.status(200).json("user has been deleted");
+  } catch (error) {
+    next(error);
+  }
+};
+
+const signOut = async (req, res, next) => {
+  try {
+    res.clearCookie("access_token").status(200).json("User has been sign out");
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { updateProfile, deleteProfile, signOut };

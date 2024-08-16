@@ -1,4 +1,5 @@
-import { Alert, Button, TextInput } from "flowbite-react";
+import { Alert, Button, Modal, TextInput } from "flowbite-react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { CircularProgressbar } from "react-circular-progressbar";
@@ -15,11 +16,15 @@ import {
   updateFailure,
   updateStart,
   updateSucess,
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  signoutSucess,
 } from "../redux/user/userSlice";
 
 export default function DashProfile() {
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, error } = useSelector((state) => state.user);
 
   const image = currentUser.profilePicture;
   const userId = currentUser._id;
@@ -35,6 +40,8 @@ export default function DashProfile() {
   const [imageUploadSucess, setImageUploadSucess] = useState(false);
   const [updateUserSucess, setUpdateUserSucess] = useState(null);
   const [updateUserError, setUpdateUserError] = useState(null);
+
+  const [showModel, setShowModel] = useState(false);
 
   const handelImageChange = (e) => {
     const file = e.target.files[0];
@@ -119,6 +126,28 @@ export default function DashProfile() {
     }
   };
 
+  const handelDeleteProfile = async () => {
+    setShowModel(false);
+    try {
+      dispatch(deleteUserStart());
+      await axios.delete(`/api/v1/delete-profile/${userId}`);
+      dispatch(deleteUserSuccess());
+    } catch (error) {
+      dispatch(deleteUserFailure(error.response.data.message));
+    }
+  };
+
+  const handelSignOut = async () => {
+    try {
+      let result = await axios.post("/api/v1/signout-profile");
+
+      if (result) {
+        return dispatch(signoutSucess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="max-w-lg  mx-auto w-full p-3  ">
       <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
@@ -195,9 +224,13 @@ export default function DashProfile() {
         </Button>
       </form>
 
-      <div className="text-red-500 cursor-pointer flex justify-between mt-5">
-        <span>Delete an Account </span>
-        <span>Sign Out </span>
+      <div className="text-red-500 cursor-pointer flex justify-between mt-5 ">
+        <span className="select-none" onClick={() => setShowModel(true)}>
+          Delete an Account{" "}
+        </span>
+        <span className="select-none" onClick={handelSignOut}>
+          Sign Out{" "}
+        </span>
       </div>
       {updateUserSucess && (
         <Alert color="success" className="mt-5">
@@ -205,6 +238,36 @@ export default function DashProfile() {
         </Alert>
       )}
       {updateUserError && <Alert color="failure">{updateUserError}</Alert>}
+      {error && <Alert color="failure">{error}</Alert>}
+
+      <Modal
+        show={showModel}
+        onClose={() => setShowModel(false)}
+        popup
+        size="md"
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete this product?
+            </h3>
+            <div className="flex justify-center gap-4 select-none">
+              <Button
+                color="failure"
+                className="select-none cursor-pointer"
+                onClick={handelDeleteProfile}
+              >
+                Yes, i'm sure
+              </Button>
+              <Button color="gray" onClick={() => setShowModel(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

@@ -36,7 +36,7 @@ export default function Oauth() {
       });
 
       if (result.statusText == "OK") {
-        dispatch(signInSucess(result));
+        dispatch(signInSucess(result.data.rest));
         navigate("/");
       }
     } catch (error) {

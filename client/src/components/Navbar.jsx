@@ -10,6 +10,17 @@ export default function Header() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+  const handelSignOut = async () => {
+    try {
+      let result = await axios.post("/api/v1/signout-profile");
+
+      if (result) {
+        return dispatch(signoutSucess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <>
@@ -65,7 +76,7 @@ export default function Header() {
                   <Dropdown.Item>Profile</Dropdown.Item>
                 </Link>
                 <Dropdown.Divider />
-                <Dropdown.Item>Sign Out</Dropdown.Item>
+                <Dropdown.Item onClick={handelSignOut}>Sign Out</Dropdown.Item>
               </Dropdown>
             </>
           ) : (

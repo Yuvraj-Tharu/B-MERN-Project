@@ -39,9 +39,9 @@ export default function SignUp() {
       if (error.response && error.response.data) {
         dispatch(signInFailure(error.response.data.message));
       } else {
-        console.log(error.message);
+        dispatch(signInFailure(error.response.data.message));
       }
-      dispatch(signInFailure());
+      dispatch(signInFailure(error.response.data.message));
     }
   };
 
