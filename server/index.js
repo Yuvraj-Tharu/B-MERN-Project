@@ -7,7 +7,17 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://localhost:5175",
+    ],
+    credentials: true,
+  })
+);
+
 const userRouter = require("./routes/user.routes");
 const UserProfileRouter = require("./routes/userProfile.routes");
 

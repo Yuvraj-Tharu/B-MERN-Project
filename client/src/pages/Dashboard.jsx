@@ -14,11 +14,21 @@ export default function Dashboard() {
     }
   }, [location.search]);
   return (
-    <div className="min-h-screen flex flex-col md:flex-row ">
-      <div className="md:w-56 ">
-        <DashSideBar />
+    <div className='min-h-screen flex flex-col md:flex-row'>
+      <div className='md:w-56'>
+        {/* Sidebar */}
+        <DashSideBar/>
       </div>
-      <div className="w-full">{tab === "profile" && <DashProfile />}</div>
+      {/* profile... */}
+      {tab === 'profile' && <DashProfile />}
+      {/* posts... */}
+      {tab === 'posts' && <DashPosts />}
+      {/* users */}
+      {tab === 'users' && <DashUsers />}
+      {/* comments  */}
+      {tab === 'comments' && <DashComments />}
+      {/* dashboard comp */}
+      {tab === 'dash' && <DashboardComp />}
     </div>
   );
 }

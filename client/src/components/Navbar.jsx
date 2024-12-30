@@ -5,11 +5,14 @@ import { CiSearch } from "react-icons/ci";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { toggletheme } from "../redux/theme/themeSlice";
+import { signoutSucess } from "../redux/user/userSlice";
+import axios from "axios";
 export default function Header() {
   const path = useLocation().pathname;
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+
   const handelSignOut = async () => {
     try {
       let result = await axios.post("/api/v1/signout-profile");
@@ -76,7 +79,9 @@ export default function Header() {
                   <Dropdown.Item>Profile</Dropdown.Item>
                 </Link>
                 <Dropdown.Divider />
-                <Dropdown.Item onClick={handelSignOut}>Sign Out</Dropdown.Item>
+                <Dropdown.Item onClick={handelSignOut}>
+                  Sign Out {console.log("click")}
+                </Dropdown.Item>
               </Dropdown>
             </>
           ) : (
