@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Alert, Button, Modal, TextInput } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import React, { useState, useRef, useEffect } from "react";
@@ -24,7 +25,7 @@ import {
 
 export default function DashProfile() {
   const dispatch = useDispatch();
-  const { currentUser, error } = useSelector((state) => state.user);
+  const { currentUser, error, loading } = useSelector((state) => state.user);
 
   const image = currentUser.profilePicture;
   const userId = currentUser._id;
@@ -218,10 +219,22 @@ export default function DashProfile() {
           placeholder="********"
           onChange={handelChange}
         />
-
-        <Button type="submit" gradientDuoTone="purpleToBlue">
-          Update
+        <Button
+          type="submit"
+          gradientDuoTone="purpleToBlue"
+          outline
+          disabled={loading || imageUploadSucess}
+        >
+          {loading ? "Loading..." : "Update"}
         </Button>
+        {currentUser.isAdmin && (
+          <Link to={"/create-post"}>
+            <Button type="submit" gradientDuoTone="purpleToBlue" outline>
+              {" "}
+              Create Post
+            </Button>
+          </Link>
+        )}
       </form>
 
       <div className="text-red-500 cursor-pointer flex justify-between mt-5 ">
