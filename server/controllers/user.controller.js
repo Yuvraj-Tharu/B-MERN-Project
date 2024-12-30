@@ -52,9 +52,13 @@ const SignIn = async (req, res, next) => {
       return next(new ApiError(400, "Invalid credentials"));
     }
 
-    const token = jwt.sign({ id: validateUser._id }, process.env.SECRETE_KEY, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: validateUser._id, isAdmin: validateUser.isAdmin },
+      process.env.SECRETE_KEY,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     const { password: pass, ...rest } = validateUser._doc;
 
@@ -74,7 +78,10 @@ const googleAuth = async (req, res, next) => {
   try {
     const user = await User.findOne({ email });
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.SECRETE_KEY);
+      const token = jwt.sign(
+        { id: user._id, isAdmin: user.isAdmin },
+        process.env.SECRETE_KEY
+      );
       const { password, ...rest } = user._doc;
       res
         .status(200)
@@ -96,6 +103,17 @@ const googleAuth = async (req, res, next) => {
       });
 
       await newUser.save();
+      const token = jwt.sign(
+        { id: newUser._id, isAdmin: newUser.isAdmin },
+        process.env.SECRETE_KEY
+      );
+      const { password, ...rest } = newUser._doc;
+      res
+        .status(200)
+        .cookie("access_token", token, {
+          httpOnly: true,
+        })
+        .json(rest);
     }
   } catch (error) {
     next(error);
